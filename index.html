@@ -1,0 +1,405 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID Card Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .form-container {
+            width: 100%;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 2px solid #007BFF;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            text-align: center; /* Center align form content */
+        }
+
+        .form-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-container input[type="text"],
+        .form-container input[type="submit"],
+        .form-container input[type="reset"],
+        .form-container textarea,
+        .form-container input[type="file"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #007BFF;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .form-container textarea {
+            height: 60px;
+            resize: vertical;
+        }
+
+        .form-container input[type="submit"],
+        .form-container input[type="reset"] {
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-container input[type="reset"] {
+            background-color: #6c757d;
+        }
+
+        .form-container input[type="submit"]:hover,
+        .form-container input[type="reset"]:hover {
+            background-color: #0056b3;
+        }
+
+        .form-container input[type="reset"]:hover {
+            background-color: #5a6268;
+        }
+
+        .id-card {
+            display: none;
+            width: 100%;
+            max-width: 1000px;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            margin-top: 20px;
+        }
+
+        .card-side {
+            width: 35%; /* Adjusted width for better alignment */
+            min-height: 650px; /* Increased height for better alignment */
+            background-color: #ffffff;
+            border: 2px solid #007BFF;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            margin: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .card-side .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+            width: 100%;
+            position: relative;
+        }
+
+        .card-side .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            left: 50%; /* Centered horizontally */
+            transform: translateX(-50%); /* Centering trick */
+        }
+
+        .card-side .college-info {
+            width: 100%;
+            text-align: center;
+            color: #007BFF;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 60px; /* Adjusted margin */
+        }
+
+        .card-side .student-photo {
+            width: 150px; /* Adjusted size */
+            height: 150px; /* Adjusted size */
+            border-radius: 10px; /* Rectangular shape */
+            border: 2px solid #007BFF;
+            margin-top: 20px; /* Adjusted margin */
+        }
+
+        .card-side .content {
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px; /* Adjusted margin */
+        }
+
+        .card-side .student-details {
+            text-align: left; /* Align details left */
+            margin-left: 50%;
+            width: 100%;
+            padding: 0 20px; /* Added padding for better spacing */
+            margin-top: 20px; /* Adjusted margin */
+        }
+
+        .card-side .student-details p {
+            margin: 5px 0;
+        }
+
+        .card-side .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto; /* Push to top */
+            width: 100%;
+            padding: 0 5px; /* Added padding for better spacing */
+        }
+
+        .card-side .signature {
+            width: 80%;
+            border-top: 1px solid #007BFF;
+            text-align: center;
+            margin-top: 20px; /* Adjusted margin */
+            position: relative;
+        }
+
+        /* Principal Signature specific styles */
+        .card-side .signature:first-child {
+            z-index: 1; /* Higher z-index to appear above */
+        }
+
+        /* Student Signature specific styles */
+        .card-side .signature:last-child {
+            z-index: 0; /* Lower z-index to appear below */
+        }
+
+        .card-side .signature p {
+            margin-top: 5px;
+        }
+
+        .back-content {
+            width: 100%;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding-top: 20px; /* Adjusted padding */
+        }
+
+        .back-content p {
+            margin: 5px 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .back-content .terms {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+
+        .back-content .terms p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <form id="idForm">
+                <label for="studentName">Student Name:</label>
+                <input type="text" id="studentName" name="studentName" required><br><br>
+                
+                <label for="usn">USN:</label>
+                <input type="text" id="usn" name="usn" required><br><br>
+                
+                <label for="branch">Branch:</label>
+                <input type="text" id="branch" name="branch" required><br><br>
+                
+                <label for="dob">Date of Birth:</label>
+                <input type="text" id="dob" name="dob" required><br><br>
+                
+                <label for="bloodGroup">Blood Group:</label>
+                <input type="text" id="bloodGroup" name="bloodGroup" required><br><br>
+
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" required><br><br>
+                
+                <label for="address">Permanent Address:</label>
+                <textarea id="address" name="address" required></textarea><br><br>
+                
+                <label for="validUpto">Valid Upto:</label>
+                <input type="text" id="validUpto" name="validUpto" required><br><br>
+                
+                <label for="fatherName">Father's Name:</label>
+                <input type="text" id="fatherName" name="fatherName" required><br><br>
+                
+                <label for="studentPhoto">Upload Student Photo (Max 2MB):</label>
+                <input type="file" id="studentPhoto" name="studentPhoto" accept="image/*" required><br>
+                <p class="note">Note: Photo should be less than 2MB.</p>
+
+                <label for="studentSignature">Upload Student Signature:</label>
+                <input type="file" id="studentSignature" name="studentSignature" accept="image/*" required><br>
+                <p class="note">Note: Signature should be in image format.</p>
+
+                <label for="principalSignature">Upload Principal Signature:</label>
+                <input type="file" id="principalSignature" name="principalSignature" accept="image/*" required><br>
+                <p class="note">Note: Signature should be in image format.</p>
+                
+                <input type="submit" value="Submit">
+                <input type="reset" value="Reset">
+            </form>
+        </div>
+
+        <div class="id-card" id="idCard">
+            <div class="card-side" id="cardFront">
+                <div class="header">
+                    <img src="logo.jpeg" alt="College Logo" class="logo">
+                </div>
+                <p class="college-info">Government of Karnataka</br>
+                Department of Collegiate and Technical Education</br>
+                <b>Government Engineering College</b></br>
+                Dodda Mannina Gudde, Near Janapada Loka, B M Road, Ramanagara-562159</p>
+                <img src="" alt="Student Photo" class="student-photo" id="displayStudentPhoto">
+                <div class="content">
+                    <div class="student-details">
+                        <p><strong>Name:</strong> <span id="displayStudentName"></span></p>
+                        <p><strong>USN:</strong> <span id="displayUsn"></span></p>
+                        <p><strong>Branch:</strong> <span id="displayBranch"></span></p>
+                    </div>
+                    <div class="signatures">
+                        <div class="signature">
+                            <p>Student signature</p>
+                            <img src="" alt="Student Signature" id="displayStudentSignature" style="max-width: 20px; max-height: 20px;">
+                        </div>
+                        <div class="signature">
+                            <p>Principal Signature</p>
+                            <img src="" alt="Principal Signature" id="displayPrincipalSignature" style="max-width: 20px; max-height: 20px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-side" id="cardBack">
+                <div class="back-content">
+                    <p><strong>Card Validity:</strong> <span id="displayValidUptoBack"></span></p>
+                    <p><strong>Date of Birth:</strong> <span id="displayDob"></span></p>
+                    <p><strong>Blood Group:</strong> <span id="displayBloodGroup"></span></p>
+                    <p><strong>Phone Number:</strong> <span id="displayPhoneNumber"></span></p>
+                    <p><strong>Father's Name:</strong> <span id="displayFatherName"></span></p>
+                    <p><strong>Permanent Address:</strong> <span id="displayAddress"></span></p>
+                    <div class="terms">
+                        <p><strong>Terms & Conditions:</strong></p>
+                        <p>1. Student should always wear the identity card in the college campus.</p>
+                        <p>2. Bring this card while visiting the library otherwise you will not able to borrow or return the books.</p>
+                        <p>3. Misuse of this card is an offence.</p><br>
+                        <p><strong>If found please return to:</strong></p>
+                        <p><strong><b>Government Engineering College</b></strong><br>
+                        Dodda Mannina Gudde, Near Janapada Loka, B M Road, Ramanagara-562159<br>
+                        Phone: 08027204390<br>
+                        Email: pplgecr2010@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('idForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Collect form data
+            var studentName = document.getElementById('studentName').value;
+            var usn = document.getElementById('usn').value;
+            var branch = document.getElementById('branch').value;
+            var validUpto = document.getElementById('validUpto').value;
+            var phoneNumber = document.getElementById('phoneNumber').value;
+            var address = document.getElementById('address').value;
+            var dob = document.getElementById('dob').value;
+            var bloodGroup = document.getElementById('bloodGroup').value;
+            var fatherName = document.getElementById('fatherName').value;
+
+            // Validate the photo size
+            var studentPhotoFile = document.getElementById('studentPhoto').files[0];
+            if (studentPhotoFile.size > 2 * 1024 * 1024) { // 2MB in bytes
+                alert("Photo size should be less than 2MB.");
+                return;
+            }
+
+            // Validate student signature
+            var studentSignatureFile = document.getElementById('studentSignature').files[0];
+            if (!studentSignatureFile || studentSignatureFile.type.split('/')[0] !== 'image') {
+                alert("Please upload a valid image file for student signature.");
+                return;
+            }
+
+            // Validate principal signature
+            var principalSignatureFile = document.getElementById('principalSignature').files[0];
+            if (!principalSignatureFile || principalSignatureFile.type.split('/')[0] !== 'image') {
+                alert("Please upload a valid image file for principal signature.");
+                return;
+            }
+
+            // Update ID card with form values
+            document.getElementById('displayStudentName').textContent = studentName;
+            document.getElementById('displayUsn').textContent = usn;
+            document.getElementById('displayBranch').textContent = branch;
+            document.getElementById('displayValidUptoBack').textContent = validUpto;
+            document.getElementById('displayPhoneNumber').textContent = phoneNumber;
+            document.getElementById('displayAddress').textContent = address;
+            document.getElementById('displayDob').textContent = dob;
+            document.getElementById('displayBloodGroup').textContent = bloodGroup;
+            document.getElementById('displayFatherName').textContent = fatherName;
+
+            // Read and display the student photo
+            var readerPhoto = new FileReader();
+            readerPhoto.onload = function(e) {
+                document.getElementById('displayStudentPhoto').src = e.target.result;
+            };
+            readerPhoto.readAsDataURL(studentPhotoFile);
+
+            // Read and display the student signature
+            var readerStudentSignature = new FileReader();
+            readerStudentSignature.onload = function(e) {
+                document.getElementById('displayStudentSignature').src = e.target.result;
+            };
+            readerStudentSignature.readAsDataURL(studentSignatureFile);
+
+            // Read and display the principal signature
+            var readerPrincipalSignature = new FileReader();
+            readerPrincipalSignature.onload = function(e) {
+                document.getElementById('displayPrincipalSignature').src = e.target.result;
+            };
+            readerPrincipalSignature.readAsDataURL(principalSignatureFile);
+
+            // Show the ID card
+            document.getElementById('idCard').style.display = 'flex';
+        });
+    </script>
+</body>
+</html>
